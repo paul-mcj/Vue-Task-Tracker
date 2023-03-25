@@ -1,15 +1,32 @@
 <template>
      <div class="container">
           <MainHeader title="Task Tracker" />
+          <Tasks :tasks="tasks" />
      </div>
 </template>
 
 <script>
 import MainHeader from "./components/MainHeader.vue";
+import Tasks from "./components/Tasks.vue";
 
 export default {
      name: "App",
-     components: { MainHeader },
+     components: { MainHeader, Tasks },
+     // ||| this method is basically a React return object in a component
+     data() {
+          return {
+               tasks: [],
+          };
+     },
+     // ||| like useEffect hook
+     created() {
+          this.tasks = [
+               { id: 1, name: "paul", task: "test task 1", reminder: true },
+               { id: 2, name: "riley", task: "task two", reminder: false },
+               { id: 3, name: "layla", task: "another task", reminder: true },
+          ];
+          console.log(this.tasks[1].name);
+     },
 };
 </script>
 
