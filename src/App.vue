@@ -1,18 +1,24 @@
 <template>
      <div class="container">
           <MainHeader title="Task Tracker" />
-          <Tasks :tasks="tasks" />
+          <AddTask @on-submit="onSubmit" />
+          <Tasks
+               :tasks="tasks"
+               @delete-task="deleteTask"
+               @change-reminder="changeReminder"
+          />
      </div>
 </template>
 
 <script>
 import MainHeader from "./components/MainHeader.vue";
 import Tasks from "./components/Tasks.vue";
+import AddTask from "./components/AddTask.vue";
 
 export default {
      name: "App",
-     components: { MainHeader, Tasks },
-     // ||| this method is basically a React return object in a component
+     components: { MainHeader, Tasks, AddTask },
+     // ||| this data method is basically a React return object in a component
      data() {
           return {
                tasks: [],
@@ -21,11 +27,55 @@ export default {
      // ||| like useEffect hook
      created() {
           this.tasks = [
-               { id: 1, name: "paul", task: "test task 1", reminder: true },
-               { id: 2, name: "riley", task: "task two", reminder: false },
-               { id: 3, name: "layla", task: "another task", reminder: true },
+               {
+                    id: 1,
+                    text: "Buy groceries",
+                    day: new Date("2023-03-27"),
+                    reminder: true,
+               },
+               {
+                    id: 2,
+                    text: "Take the dog for a walk",
+                    day: new Date("2023-03-28"),
+                    reminder: true,
+               },
+               {
+                    id: 3,
+                    text: "Do laundry",
+                    day: new Date("2023-03-29"),
+                    reminder: false,
+               },
+               {
+                    id: 4,
+                    text: "Pay bills",
+                    day: new Date("2023-03-30"),
+                    reminder: true,
+               },
+               {
+                    id: 5,
+                    text: "Clean the house",
+                    day: new Date("2023-03-31"),
+                    reminder: false,
+               },
           ];
+
           console.log(this.tasks[1].name);
+     },
+     methods: {
+          deleteTask(id) {
+               // ||| kinda like resetting state in react, do not manipulate the state directly but rather pass it a completely new re-written value for it
+               this.tasks = this.tasks.filter((task) => task.id !== id);
+          },
+          changeReminder(id) {
+               this.tasks.forEach((task) => {
+                    if (task.id === id) task.reminder = !task.reminder;
+               });
+          },
+          onSubmit(e, { text, day, reminder }) {
+               e.preventDefault();
+
+               console.log(day, text, reminder);
+          },
      },
 };
 </script>

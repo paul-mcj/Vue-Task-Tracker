@@ -1,5 +1,5 @@
 <template>
-     <button @click="onClick()" :style="{ background: color }" class="btn">
+     <button :style="{ background: color }" class="btn">
           {{ text }}
      </button>
 </template>
@@ -11,13 +11,6 @@ export default {
      props: {
           text: String,
           color: String,
-          onClickFn: Function,
-     },
-     methods: {
-          onClick() {
-               this.onClickFn();
-               //    console.log(`${this.text} button clicked`);
-          },
      },
 };
 </script>

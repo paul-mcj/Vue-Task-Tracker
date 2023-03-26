@@ -1,9 +1,16 @@
 <template>
      <div :class="[task.reminder ? 'reminderActive' : '']">
-          <li>{{ task.name }}</li>
-          <p>{{ task.task }}</p>
-          <Button text="Turn reminder on/off" @onClickFn="onChangeReminder()" />
-          <Button text="Delete" onClick="" />
+          <li>{{ task.text }}</li>
+          <p>{{ task.day }}</p>
+          <Button
+               text="Turn reminder [task.reminder ? 'off' : 'on']"
+               @click="$emit('change-reminder', task.id)"
+          />
+          <Button
+               text="Delete"
+               color="red"
+               @click="$emit('delete-task', task.id)"
+          />
      </div>
 </template>
 <script>
@@ -15,11 +22,15 @@ export default {
           task: Object,
      },
      components: { Button },
-     methods: {
-          onChangeReminder() {
-               console.log("hhhh");
-          },
-     },
+     //  methods: {
+     //       onChangeReminder(id) {
+     //            this.$emit("change-reminder", id);
+     //       },
+     //       onDelete(id) {
+     //            //||| emit is basically Vue's way of passing props between child and parent
+     //            this.$emit("delete-task", id);
+     //       },
+     //  },
 };
 </script>
 <style>

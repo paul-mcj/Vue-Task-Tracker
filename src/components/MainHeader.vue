@@ -1,7 +1,7 @@
 <template>
      <header>
           <h1>{{ title }}</h1>
-          <Button text="Add Task" color="green" />
+          <Button text="Add Task" color="green" @click="onAdd()" />
      </header>
 </template>
 
@@ -12,6 +12,11 @@ export default {
      name: "MainHeader",
      props: { title: String },
      components: { Button },
+     methods: {
+          onAdd() {
+               console.log("add");
+          },
+     },
 };
 </script>
 
