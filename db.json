@@ -1,28 +1,22 @@
 {
   "tasks": [
     {
-      "id": 1,
-      "text": "Buy groceries",
-      "day": "2023-03-28T14:30:00.000Z",
-      "reminder": false
-    },
-    {
-      "id": 4,
-      "text": "Call mom",
-      "day": "2023-03-31T10:00:00.000Z",
-      "reminder": true
-    },
-    {
       "id": 5,
       "text": "Finish report",
       "day": "2023-04-01T12:00:00.000Z",
-      "reminder": false
+      "reminder": true
     },
     {
       "day": "3:30 april2 ",
       "text": "learn more vue",
       "reminder": true,
       "id": 6
+    },
+    {
+      "day": "rer",
+      "text": "rer",
+      "reminder": true,
+      "id": 7
     }
   ]
 }

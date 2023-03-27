@@ -5,84 +5,28 @@
                @toggle-add-task="onToggleAddTask"
                :showAddTask="showAddTask"
           />
-          <div v-show="showAddTask">
-               <AddTask @on-submit="onAddTask" />
-          </div>
-          <Tasks
-               :tasks="tasks"
-               @delete-task="deleteTask"
-               @change-reminder="changeReminder"
-          />
+          <!-- ||| you can pass props to a router view in Vue.js, and use that prop in ANY page that lies within it! -->
+          <router-view :showAddTask="showAddTask" />
+          <Footer />
      </div>
 </template>
 
 <script>
 import MainHeader from "./components/MainHeader.vue";
-import Tasks from "./components/Tasks.vue";
-import AddTask from "./components/AddTask.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
      name: "App",
-     components: { MainHeader, Tasks, AddTask },
+     components: { MainHeader, Footer },
      // ||| this data method is basically a React return object in a component
      data() {
           return {
-               tasks: [],
                showAddTask: false,
           };
-     },
-     // ||| like useEffect hook
-     async created() {
-          this.tasks = await this.fetchTasks();
      },
      methods: {
           onToggleAddTask() {
                this.showAddTask = !this.showAddTask;
-          },
-          async fetchTasks() {
-               const res = await fetch("api/tasks");
-               const data = await res.json();
-               return data;
-          },
-          async fetchSingleTask(id) {
-               const res = await fetch(`api/tasks/${id}`);
-               const data = await res.json();
-               return data;
-          },
-          async onAddTask({ day, text, reminder }) {
-               const res = await fetch("api/tasks", {
-                    method: "POST",
-                    headers: { "Content-type": "application/json" },
-                    body: JSON.stringify({ day, text, reminder }),
-               });
-               const data = await res.json();
-               this.tasks = [...this.tasks, data];
-          },
-          async deleteTask(id) {
-               const res = await fetch(`api/tasks/${id}`, {
-                    method: "DELETE",
-               });
-               res.status === 200
-                    ? // ||| kinda like resetting state in react, do not manipulate the state directly but rather pass it a completely new re-written value for it
-                      (this.tasks = this.tasks.filter((task) => task.id !== id))
-                    : alert("Error while deleting task");
-          },
-          async changeReminder(id) {
-               const targetTask = await this.fetchSingleTask(id);
-               const updatedTask = {
-                    ...targetTask,
-                    reminder: !targetTask.reminder,
-               };
-               const res = await fetch(`api/tasks/${id}`, {
-                    method: "PUT",
-                    headers: { "Content-type": "application/json" },
-                    body: JSON.stringify(updatedTask),
-               });
-               const data = await res.json();
-               // ||| Just like when dealing with JSX list items, data can be mapped easily:
-               this.tasks = this.tasks.map((task) =>
-                    task.id === id ? { ...task, reminder: data.reminder } : task
-               );
           },
      },
 };
