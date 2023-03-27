@@ -36,14 +36,18 @@ export default {
           this.tasks = await this.fetchTasks();
      },
      methods: {
-          deleteTask(id) {
-               // ||| kinda like resetting state in react, do not manipulate the state directly but rather pass it a completely new re-written value for it
-               this.tasks = this.tasks.filter((task) => task.id !== id);
+          onToggleAddTask() {
+               this.showAddTask = !this.showAddTask;
           },
-          changeReminder(id) {
-               this.tasks.forEach((task) => {
-                    if (task.id === id) task.reminder = !task.reminder;
-               });
+          async fetchTasks() {
+               const res = await fetch("api/tasks");
+               const data = await res.json();
+               return data;
+          },
+          async fetchSingleTask(id) {
+               const res = await fetch(`api/tasks/${id}`);
+               const data = await res.json();
+               return data;
           },
           async onAddTask({ day, text, reminder }) {
                const res = await fetch("api/tasks", {
@@ -54,18 +58,31 @@ export default {
                const data = await res.json();
                this.tasks = [...this.tasks, data];
           },
-          onToggleAddTask() {
-               this.showAddTask = !this.showAddTask;
+          async deleteTask(id) {
+               const res = await fetch(`api/tasks/${id}`, {
+                    method: "DELETE",
+               });
+               res.status === 200
+                    ? // ||| kinda like resetting state in react, do not manipulate the state directly but rather pass it a completely new re-written value for it
+                      (this.tasks = this.tasks.filter((task) => task.id !== id))
+                    : alert("Error while deleting task");
           },
-          async fetchTasks() {
-               const res = await fetch("api/tasks");
+          async changeReminder(id) {
+               const targetTask = await this.fetchSingleTask(id);
+               const updatedTask = {
+                    ...targetTask,
+                    reminder: !targetTask.reminder,
+               };
+               const res = await fetch(`api/tasks/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-type": "application/json" },
+                    body: JSON.stringify(updatedTask),
+               });
                const data = await res.json();
-               return data;
-          },
-          async fetchSingleTask(id) {
-               const res = await fetch(`api/tasks${id}`);
-               const data = await res.json();
-               return data;
+               // ||| Just like when dealing with JSX list items, data can be mapped easily:
+               this.tasks = this.tasks.map((task) =>
+                    task.id === id ? { ...task, reminder: data.reminder } : task
+               );
           },
      },
 };
