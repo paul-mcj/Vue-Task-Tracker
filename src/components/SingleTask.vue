@@ -37,6 +37,6 @@ export default {
 </script>
 <style>
 .reminderActive {
-     background-color: aqua;
+     border-right: 5px solid green;
 }
 </style>

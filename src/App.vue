@@ -6,7 +6,7 @@
                :showAddTask="showAddTask"
           />
           <div v-show="showAddTask">
-               <AddTask @on-submit="onSubmit" />
+               <AddTask @on-submit="onAddTask" />
           </div>
           <Tasks
                :tasks="tasks"
@@ -32,41 +32,8 @@ export default {
           };
      },
      // ||| like useEffect hook
-     created() {
-          this.tasks = [
-               {
-                    id: 1,
-                    text: "Buy groceries",
-                    day: new Date("2023-03-27"),
-                    reminder: true,
-               },
-               {
-                    id: 2,
-                    text: "Take the dog for a walk",
-                    day: new Date("2023-03-28"),
-                    reminder: true,
-               },
-               {
-                    id: 3,
-                    text: "Do laundry",
-                    day: new Date("2023-03-29"),
-                    reminder: false,
-               },
-               {
-                    id: 4,
-                    text: "Pay bills",
-                    day: new Date("2023-03-30"),
-                    reminder: true,
-               },
-               {
-                    id: 5,
-                    text: "Clean the house",
-                    day: new Date("2023-03-31"),
-                    reminder: false,
-               },
-          ];
-
-          console.log(this.tasks[1].name);
+     async created() {
+          this.tasks = await this.fetchTasks();
      },
      methods: {
           deleteTask(id) {
@@ -78,12 +45,27 @@ export default {
                     if (task.id === id) task.reminder = !task.reminder;
                });
           },
-          onSubmit({ day, text, reminder }) {
-               let newTaskObj = { day, text, reminder, id: Math.random() };
-               this.tasks = [...this.tasks, newTaskObj];
+          async onAddTask({ day, text, reminder }) {
+               const res = await fetch("api/tasks", {
+                    method: "POST",
+                    headers: { "Content-type": "application/json" },
+                    body: JSON.stringify({ day, text, reminder }),
+               });
+               const data = await res.json();
+               this.tasks = [...this.tasks, data];
           },
           onToggleAddTask() {
                this.showAddTask = !this.showAddTask;
+          },
+          async fetchTasks() {
+               const res = await fetch("api/tasks");
+               const data = await res.json();
+               return data;
+          },
+          async fetchSingleTask(id) {
+               const res = await fetch(`api/tasks${id}`);
+               const data = await res.json();
+               return data;
           },
      },
 };
