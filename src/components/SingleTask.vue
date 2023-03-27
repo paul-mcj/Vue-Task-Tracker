@@ -3,7 +3,8 @@
           <li>{{ task.text }}</li>
           <p>{{ task.day }}</p>
           <Button
-               text="Turn reminder [task.reminder ? 'off' : 'on']"
+               :text="isReminder ? 'Reminder is off' : 'Reminder is on'"
+               :color="isReminder ? 'red' : 'green'"
                @click="$emit('change-reminder', task.id)"
           />
           <Button
@@ -20,6 +21,7 @@ export default {
      name: "SingleTask",
      props: {
           task: Object,
+          isReminder: Boolean,
      },
      components: { Button },
      //  methods: {

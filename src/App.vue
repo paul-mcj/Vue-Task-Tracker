@@ -1,7 +1,13 @@
 <template>
      <div class="container">
-          <MainHeader title="Task Tracker" />
-          <AddTask @on-submit="onSubmit" />
+          <MainHeader
+               title="Task Tracker"
+               @toggle-add-task="onToggleAddTask"
+               :showAddTask="showAddTask"
+          />
+          <div v-show="showAddTask">
+               <AddTask @on-submit="onSubmit" />
+          </div>
           <Tasks
                :tasks="tasks"
                @delete-task="deleteTask"
@@ -22,6 +28,7 @@ export default {
      data() {
           return {
                tasks: [],
+               showAddTask: false,
           };
      },
      // ||| like useEffect hook
@@ -71,10 +78,12 @@ export default {
                     if (task.id === id) task.reminder = !task.reminder;
                });
           },
-          onSubmit(e, { text, day, reminder }) {
-               e.preventDefault();
-
-               console.log(day, text, reminder);
+          onSubmit({ day, text, reminder }) {
+               let newTaskObj = { day, text, reminder, id: Math.random() };
+               this.tasks = [...this.tasks, newTaskObj];
+          },
+          onToggleAddTask() {
+               this.showAddTask = !this.showAddTask;
           },
      },
 };

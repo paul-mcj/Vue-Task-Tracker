@@ -1,6 +1,6 @@
 <template>
      <form
-          @submit="this.$emit('on-submit', { text, day, reminder })"
+          @submit.prevent="this.$emit('on-submit', { day, text, reminder })"
           class="add-form"
      >
           <div class="form-control">

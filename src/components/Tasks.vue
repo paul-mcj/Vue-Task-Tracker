@@ -2,6 +2,7 @@
      <ul v-for="task in tasks" :key="task.id">
           <SingleTask
                :task="task"
+               :isReminder="task.reminder"
                @delete-task="this.$emit('delete-task', task.id)"
                @change-reminder="this.$emit('change-reminder', task.id)"
           />
